@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    triggers {
+        // Activación por webhook
+        githubPush()
+        
+    }
+
+    stages {
+        stage('Checkout / Pull') {
+            steps {
+                // Usamos las credenciales (usuario/contraseña o usuario/token) guardadas en Jenkins
+                withCredentials([usernamePassword(credentialsId: '111834a5-189b-4c2e-96b7-0cf89156bef9',
+                                                 usernameVariable: 'GIT_USER',
+                                                 passwordVariable: 'GIT_TOKEN')]) {
+                    sh """
+                        # Si ya existe la carpeta del repo, hacemos pull
+                        if [ -d FedecacaoBack ]; then
+                          echo 'Directorio encontrado, actualizando con git pull...'
+                          cd FedecacaoBack
+                          git checkout development
+                          git pull origin development
+                        else
+                          echo 'Clonando el repositorio...'
+                          git clone -b development https://$GIT_USER:$GIT_TOKEN@github.com/DesarrolloIsamc/FedecacaoBack.git FedecacaoBack
+                        fi
+                    """
+                }
+            }
+        }
+
+        stage('Stop & Remove Docker') {
+            steps {
+                sh """
+                    cd FedecacaoBack
+
+                    # Buscamos si el contenedor está corriendo o existe:
+                    if docker ps -a --format '{{.Names}}' | grep -q '^fedecacaoback_web_1\$'; then
+                        echo "Contenedor fedecacaoback_web_1 encontrado. Deteniendo..."
+                        docker stop fedecacaoback_web_1
+                        docker rm fedecacaoback_web_1
+                        docker system prune -af
+                    else
+                        echo "El contenedor fedecacaoback_web_1 no existe, no se requiere stop/rm."
+                    fi
+                """
+            }
+        }
+
+        stage('Deploy Docker') {
+            steps {
+                sh """
+                    cd FedecacaoBack
+                    # Si necesitas reconstruir imágenes con Dockerfile:
+                    docker-compose -f docker-compose.yml build --no-cache
+
+                    # Levantamos contenedores en segundo plano con los cambios más recientes
+                    docker-compose -f docker-compose.yml up -d
+                """
+            }
+        }
+    }
+}

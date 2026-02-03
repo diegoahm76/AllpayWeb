@@ -1,0 +1,16 @@
+services:
+  web:
+    build: . 
+    image: backend-fedecacao-app
+    env_file: 
+      - .env
+    volumes: 
+      - static_volume:/home/app/backend-fedecacao/build/static
+      - /data:/data
+    ports: 
+      - 8000:8000
+    restart: "always"
+
+
+volumes:
+  static_volume:

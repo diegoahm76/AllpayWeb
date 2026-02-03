@@ -1,0 +1,52 @@
+{
+  "family": "fedecacao-backend-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::356712705756:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::356712705756:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "356712705756.dkr.ecr.us-east-1.amazonaws.com/fedecacao-backend:latest",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DJANGO_SETTINGS_MODULE",
+          "value": "backend.settings"
+        },
+        { "name": "AWS_REGION", "value": "us-east-1" }
+      ],
+      "secrets": [
+            {
+            "name": "DB_CREDENTIALS",
+            "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/db"
+            },
+            {
+            "name": "REDIS_CREDENTIALS",
+            "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/redis"
+            },
+            {
+            "name": "BACKEND_ENV",
+            "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/backend"
+            }
+        ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fedecacao-backend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "essential": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="bd_fedecacao@rds-fedecacao.c3eeogcqs0f1.sa-east-1.rds.amazonaws.com" uuid="a0ed3fe7-2d9a-4216-a7e7-f8f7b78cb95d">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://rds-fedecacao.c3eeogcqs0f1.sa-east-1.rds.amazonaws.com:5432/bd_fedecacao</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </component>
+</project>
