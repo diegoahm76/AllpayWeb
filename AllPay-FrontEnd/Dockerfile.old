@@ -1,0 +1,85 @@
+# Dockerfile optimizado para Next.js 15 en AWS ECS/Fargate
+# Usa standalone build para reducir tamaño y mejorar rendimiento
+
+# ============================================
+# Stage 1: Dependencies
+# ============================================
+FROM node:22.13.1-alpine AS deps
+WORKDIR /app
+
+# Copiar archivos de dependencias
+COPY package.json package-lock.json* ./
+
+# Instalar TODAS las dependencias (incluyendo devDependencies para el build)
+# NOTA: No usar --only=production porque el build necesita devDependencies
+# (TypeScript, TailwindCSS, etc.)
+RUN npm ci && \
+    npm cache clean --force
+
+# ============================================
+# Stage 2: Builder
+# ============================================
+FROM node:22.13.1-alpine AS builder
+WORKDIR /app
+
+# Copiar dependencias del stage anterior
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Variables de entorno para el build
+# NOTA: Estas deben estar disponibles durante el build
+# Si usas Secrets Manager, inyéctalas aquí o durante el build
+ARG NODE_ENV=production
+ARG NEXT_SERVER_ACTIONS_ENCRYPTION_KEY
+ARG AUTH_SECRET
+ARG BASE_URL
+ARG NEXTAUTH_URL
+ARG BASE_API_URL
+
+ENV NODE_ENV=$NODE_ENV
+ENV NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=$NEXT_SERVER_ACTIONS_ENCRYPTION_KEY
+ENV AUTH_SECRET=$AUTH_SECRET
+ENV BASE_URL=$BASE_URL
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
+ENV BASE_API_URL=$BASE_API_URL
+
+# Build de producción con standalone output
+RUN npm run build
+
+# ============================================
+# Stage 3: Runner (producción)
+# ============================================
+FROM node:22.13.1-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Crear usuario no-root para seguridad
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copiar archivos necesarios del build standalone
+# El build standalone crea una carpeta dist/standalone con:
+# - server.js (servidor principal)
+# - node_modules (solo dependencias necesarias)
+# - package.json
+# - Referencias a dist/static para archivos estáticos
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/dist/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/dist/static ./dist/static
+
+# Establecer permisos
+RUN chown -R nextjs:nodejs /app
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Usar el servidor standalone de Next.js
+# El standalone build crea server.js en la raíz del directorio standalone
+CMD ["node", "server.js"]
+

@@ -1,0 +1,20 @@
+aws ecs register-task-definition --cli-input-json file://ecs-task-frontend.json
+
+aws ecs create-service `
+  --cluster fedecacao-cluster `
+  --service-name fedecacao-frontend-service `
+  --task-definition fedecacao-frontend-task:24 `
+  --desired-count 1 `
+  --launch-type FARGATE `
+  --network-configuration "awsvpcConfiguration={subnets=[subnet-0d723ec8b9ace9073,subnet-0e2b01c9a30a3e803],securityGroups=[sg-0c20261dfee269b2a],assignPublicIp=ENABLED}" `
+  --load-balancers "targetGroupArn=arn:aws:elasticloadbalancing:us-east-1:356712705756:targetgroup/tg-frontend/e9b8bf3b843665e8,containerName=frontend,containerPort=3000" `
+  --region us-east-1
+
+  aws ecs update-service `
+  --cluster fedecacao-cluster `
+  --service fedecacao-frontend-service `
+  --desired-count 1 `
+  --force-new-deployment `
+  --region us-east-1
+
+  aws ecs describe-services --cluster fedecacao-cluster --services fedecacao-backend-service --region us-east-1 | ConvertFrom-Json | Select-Object -ExpandProperty services | Format-List

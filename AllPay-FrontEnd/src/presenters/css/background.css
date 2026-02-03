@@ -1,0 +1,31 @@
+.background {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    /* Permite que crezca con el contenido */
+    min-height: 100vh;
+    background-image: url('/images/bgNew-2.png');
+    background-size: cover;
+    /* Ajusta la imagen para cubrir toda la pantalla */
+    background-attachment: fixed;
+    /* Mantiene la imagen fija al hacer scroll */
+    background-position: center;
+    /* Centra la imagen en la pantalla */
+    background-repeat: no-repeat;
+    /* Evita que la imagen se repita */
+}
+
+.background2 {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+    /* Permite que crezca con el contenido */
+    background-image: url('/images/bg-3.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: #1f2937 !important; /* text-gray-800 */
+}

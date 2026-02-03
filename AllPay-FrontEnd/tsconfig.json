@@ -1,0 +1,63 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@cacaoia/*": [
+        "./src/cacaoia/*"
+      ]
+    },
+    "target": "ES2022", // Keep the target at ES2022 for the latest ECMAScript features
+    "module": "esnext", // Suitable for Node.js, but consider "es2020" if you plan to use ECMAScript modules
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ESNext"
+    ], // Use the latest version of the libraries
+    "outDir": "./dist", //  Output directory for compiled files
+    "rootDir": "./src", // Specifies the root folder for source files
+    "moduleResolution": "bundler", // Module resolution in Node.js style
+    "esModuleInterop": true, // Allows interoperability between ES6 and CommonJS/AMD modules
+    "forceConsistentCasingInFileNames": true, // Prevents issues on file systems that are case-insensitive
+    "strict": true, // Enables all strict type-checking options
+    "skipLibCheck": true, // Skips type checking for declaration files
+    "resolveJsonModule": true, // Allows importing .json files
+    "experimentalDecorators": true, // Enables support for experimental decorators
+    "emitDecoratorMetadata": true, // Emits metadata for decorators
+    "sourceMap": true, // Generates .map files for debugging
+    "allowJs": true, // Allows compiling .js files
+    "allowSyntheticDefaultImports": true, // Allows default imports from modules without a default export
+    "alwaysStrict": true, // Analyzes all files in strict mode and emits "use strict" in JS files
+    "noImplicitAny": true, // Increases type safety by not allowing expressions or declarations with an implicit 'any' type
+    "noImplicitReturns": true, //Reports errors for functions that don't return a value on all code paths
+    "noUnusedLocals": true, // Reports errors for local variables that are not used
+    "noUnusedParameters": true, // Reports errors for function parameters that are not used
+    "noFallthroughCasesInSwitch": true // Prevents fall-through in switch statements
+  },
+  "include": [
+    "src/**/*",
+    "src/**/**/*",
+    "src/**/**/**/*",
+    "src/**/**/**/**/*",
+    "dist/types/**/*.ts",
+    "dist/types/**/**/*.ts",
+    "dist/types/app/api/auth/[...nextauth]/*",
+    ".next/types/**/*.ts"
+, "src/app/(Component)/(ComponentDashboard)/recaudadores/identificacion_temporal/services/identificacion.service.ts"  ], // Includes all files inside the 'src' folder
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "dist"
+  ], // Excludes the 'node_modules' folder and test files
+  "compileOnSave": false // Disables automatic compilation on save, consider using a watcher like nodemon or tsc --watch
+}

@@ -1,0 +1,75 @@
+{
+  "family": "fedecacao-frontend-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::356712705756:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "356712705756.dkr.ecr.us-east-1.amazonaws.com/fedecacao-frontend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "NODE_ENV",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "NEXT_HOME_URL",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "AUTH_PATH",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "AUTH_URL",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "AUTH_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "BASE_API_URL",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "CAPCHA_API",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "CAPCHA_API_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "MERCHANT_ID",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        },
+        {
+          "name": "BASE_OPEN_PAY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fedecacao-frontend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}

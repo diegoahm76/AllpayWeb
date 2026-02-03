@@ -1,0 +1,91 @@
+{
+  "networkMode": "awsvpc",
+  "executionRoleArn": "arn:aws:iam::356712705756:role/ecsTaskExecutionRole",
+  "cpu": "256",
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "356712705756.dkr.ecr.us-east-1.amazonaws.com/fedecacao-frontend:latest",
+      "cpu": 0,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "secrets": [
+        {
+          "name": "NODE_ENV",
+          "valueFrom": "/fedecacao/frontend:NODE_ENV"
+        },
+        {
+          "name": "NEXT_HOME_URL",
+          "valueFrom": "/fedecacao/frontend:NEXT_HOME_URL"
+        },
+        {
+          "name": "AUTH_PATH",
+          "valueFrom": "/fedecacao/frontend:AUTH_PATH"
+        },
+        {
+          "name": "AUTH_URL",
+          "valueFrom": "/fedecacao/frontend:AUTH_URL"
+        },
+        {
+          "name": "AUTH_SECRET",
+          "valueFrom": "/fedecacao/frontend:AUTH_SECRET"
+        },
+        {
+          "name": "NEXT_PUBLIC_API_URL",
+          "valueFrom": "/fedecacao/frontend:NEXT_PUBLIC_API_URL"
+        },
+        {
+          "name": "NEXT_PUBLIC_BASE_API_URL",
+          "valueFrom": "/fedecacao/frontend:NEXT_PUBLIC_BASE_API_URL"
+        },
+        {
+          "name": "CAPCHA_API",
+          "valueFrom": "/fedecacao/frontend:CAPCHA_API"
+        },
+        {
+          "name": "CAPCHA_API_SECRET",
+          "valueFrom": "/fedecacao/frontend:CAPCHA_API_SECRET"
+        },
+        {
+          "name": "API_KEY",
+          "valueFrom": "/fedecacao/frontend:API_KEY"
+        },
+        {
+          "name": "MERCHANT_ID",
+          "valueFrom": "/fedecacao/frontend:MERCHANT_ID"
+        },
+        {
+          "name": "BASE_OPEN_PAY",
+          "valueFrom": "/fedecacao/frontend:BASE_OPEN_PAY"
+        },
+        {
+          "name": "NEXT_PUBLIC_LOGIN_REDIRECT_URL",
+          "valueFrom": "/fedecacao/frontend:NEXT_PUBLIC_LOGIN_REDIRECT_URL"
+        }
+      ],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fedecacao-frontend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "systemControls": []
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "taskRoleArn": "arn:aws:iam::356712705756:role/ecsTaskRole",
+  "family": "fedecacao-frontend-task",
+  "memory": "512"
+}

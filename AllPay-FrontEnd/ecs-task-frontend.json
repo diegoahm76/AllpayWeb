@@ -1,0 +1,37 @@
+{
+  "family": "fedecacao-frontend-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::356712705756:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::356712705756:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "356712705756.dkr.ecr.us-east-1.amazonaws.com/fedecacao-frontend:latest",
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "FRONTEND_ENV",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:356712705756:secret:/fedecacao/frontend"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/fedecacao-frontend",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "essential": true
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+
+    triggers {
+        // Activación por webhook
+        githubPush()
+        
+    }
+
+    stages {
+        stage('Checkout / Pull') {
+            steps {
+                // Usamos las credenciales (usuario/contraseña o usuario/token) guardadas en Jenkins
+                withCredentials([usernamePassword(credentialsId: '2ad96985-00f2-4769-be07-40941db3197c',
+                                                 usernameVariable: 'GIT_USER',
+                                                 passwordVariable: 'GIT_TOKEN')]) {
+                    sh """
+                        # Si ya existe la carpeta del repo, hacemos pull
+                        if [ -d FedecacaoFront ]; then
+                          echo 'Directorio encontrado, actualizando con git pull...'
+                          cd FedecacaoFront
+                          git checkout develop
+                          git pull origin develop
+                        else
+                          echo 'Clonando el repositorio...'
+                          git clone -b develop https://$GIT_USER:$GIT_TOKEN@github.com/DesarrolloIsamc/FedecacaoFront.git FedecacaoFront
+                        fi
+                    """
+                }
+            }
+        }
+
+        stage('Stop & Remove Docker') {
+            steps {
+                sh """
+                    cd FedecacaoFront
+
+                    # Buscamos si el contenedor está corriendo o existe:
+                    if docker ps -a --format '{{.Names}}' | grep -q '^react-ui\$'; then
+                        echo "Contenedor react-ui encontrado. Deteniendo..."
+                        docker stop react-ui
+                        docker rm react-ui
+                        docker system prune -af
+                    else
+                        echo "El contenedor react-ui no existe, no se requiere stop/rm."
+                    fi
+                """
+            }
+        }
+
+        stage('Deploy Docker') {
+            steps {
+                sh """
+                    cd FedecacaoFront
+                    # Si necesitas reconstruir imágenes con Dockerfile:
+                    docker-compose -f docker-compose.yml build --no-cache
+
+                    # Levantamos contenedores en segundo plano con los cambios más recientes
+                    docker-compose -f docker-compose.yml up -d
+                """
+            }
+        }
+    }
+}

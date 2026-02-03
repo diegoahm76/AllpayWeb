@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": true, // Execution environment in the browser
+    "es2021": true, // Uses ECMAScript 2021 features
+    "node": true // Execution environment in Node.js
+  },
+  "extends": "next",
+  "rules": {
+    "no-console": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "max-statements": "off"
+  }
+}

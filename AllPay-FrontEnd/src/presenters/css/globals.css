@@ -1,0 +1,121 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  @apply bg-white text-black;
+  /* Modo claro */
+}
+
+/* Modo oscuro */
+body .dark {
+  @apply bg-[#260E00] text-white;
+  /* Modo oscuro */
+}
+
+body .darkLi {
+  @apply bg-[#260E00] text-white;
+  /* Modo oscuro */
+}
+
+/* Fin clases modo oscuro */
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ocultar los controles de incremento/decremento en Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.loader {
+  border: 5px solid #ade9b0;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.button-show {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+
+input:focus {
+  border: solid 2px #4D750F;
+  outline: none;
+  /* Opcional: Esto eliminará el contorno predeterminado del navegador */
+}
+
+select:focus {
+  border: solid 2px rgb(var(--green));
+  outline: none;
+}
+
+::-ms-reveal {
+  display: none;
+}
+
+textarea:focus {
+  border: solid 2px rgb(var(--green));
+  outline: none;
+}
+
+:root {
+  color-scheme: light !important;
+
+  /* Paleta de colores de la aplicación */
+
+  --green: 77, 117, 15;
+  --green-80: 77, 117, 15, 0.8;
+  --green-60: 77, 117, 15, 0.6;
+  --green-40: 77, 117, 15, 0.4;
+  --green-20: 77, 117, 15, 0.2;
+
+  --brown: 86, 39, 7;
+  --brown-80: 86, 39, 7, 0.8;
+  --brown-60: 86, 39, 7, 0.6;
+  --brown-40: 86, 39, 7, 0.4;
+  --brown-20: 86, 39, 7, 0.2;
+
+  --dark-brown: 38, 14, 0;
+  --dark-brown-80: 38, 14, 0, 0.8;
+  --dark-brown-60: 38, 14, 0, 0.6;
+  --dark-brown-40: 38, 14, 0, 0.4;
+  --dark-brown-20: 38, 14, 0, 0.2;
+
+  --gray: 22, 22, 3;
+  --gray-80: 22, 22, 3, 0.8;
+  --gray-60: 22, 22, 3, 0.6;
+  --gray-40: 22, 22, 3, 0.4;
+  --gray-20: 22, 22, 3, 0.2;
+
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #1f2937 !important; /* text-gray-800 */
+}
